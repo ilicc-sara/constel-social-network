@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 function LogIn() {
   return (
     <section className="min-h-screen !mt-[5%]">
@@ -23,6 +25,10 @@ function LogIn() {
             type="password"
           />
         </div>
+
+        <Link to="/home">
+          <button className="w-full bg-white py-2">Confirm</button>
+        </Link>
       </form>
     </section>
   );
