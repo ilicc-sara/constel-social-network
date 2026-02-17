@@ -4,25 +4,45 @@ function Home() {
   const token =
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMGE0OGEyYjMtZjY2MC00YjIwLWEyNjEtYzllZjE1YzI4NmY3IiwiaWF0IjoxNzcxMzQxMzc3fQ.VqQH-_OR-Ton_-sHeletFnth_Zolto944qTERSSohGQ";
 
-  https: useEffect(() => {
-    const fetchPosts = async () => {
-      const response = await fetch(
-        "https://api.hr.constel.co/api/v1/accounts/me",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
-      const posts = await response.json();
-
-      console.log(posts);
+  useEffect(() => {
+    const fetchUser = async () => {
       try {
+        const userResponse = await fetch(
+          "https://api.hr.constel.co/api/v1/accounts/me",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        );
+        const user = await userResponse.json();
+
+        console.log("user response", user);
       } catch (err) {
         console.error(err);
       }
     };
 
+    const fetchPosts = async () => {
+      try {
+        const postResponse = await fetch(
+          "https://api.hr.constel.co/api/v1/posts",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        );
+
+        const posts = await postResponse.json();
+
+        console.log("posts response", posts);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchUser();
     fetchPosts();
   }, []);
 
