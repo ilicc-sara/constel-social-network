@@ -48,8 +48,18 @@ function Home() {
 
   return (
     <section className="min-h-screen !mt-[5%]">
-      <div className="w-[fit-content] !mx-auto flex justify-center items-center gap-2">
-        <h1>Home</h1>
+      <div className="w-[fit-content] !mx-auto ">
+        <form className="flex">
+          <img src="logo.jpg" className="w-14 h-14" />
+          <input
+            type="text"
+            className="border-b border-gray-300"
+            placeholder="What's happening"
+          />
+          <div>
+            <button>New Post </button>
+          </div>
+        </form>
       </div>
     </section>
   );
