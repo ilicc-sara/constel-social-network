@@ -49,15 +49,19 @@ function Home() {
   return (
     <section className="min-h-screen !mt-[5%]">
       <div className="w-[fit-content] !mx-auto ">
-        <form className="flex">
-          <img src="logo.jpg" className="w-14 h-14" />
-          <input
-            type="text"
-            className="border-b border-gray-300"
-            placeholder="What's happening"
-          />
-          <div>
-            <button>New Post </button>
+        <form className="flex flex-col">
+          <div className="flex">
+            <figure>
+              <img src="logo.jpg" className="w-14 h-14" />
+            </figure>
+            <input
+              type="text"
+              className="border-b border-gray-300"
+              placeholder="What's happening"
+            />
+          </div>
+          <div className="flex justify-end !py-1">
+            <button className="bg-blue-500 text-white !px-4">New Post</button>
           </div>
         </form>
       </div>
