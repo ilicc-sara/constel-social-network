@@ -80,3 +80,6 @@ He5r4dOVdy9x6IT
 <i className="bxr  bxs-heart"></i>
 <i className="bxr  bx-message-bubble-reply"></i>
 <i className="bxr  bxs-message-bubble-reply"></i>
+
+<i className="bxr  bx-calendar"></i>
+<i className="bxr  bx-trash"></i>
