@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 
 function Home() {
   const token =
@@ -47,7 +47,7 @@ function Home() {
   }, []);
 
   return (
-    <section className="min-h-screen !mt-[5%] flex flex-col items-start gap-5">
+    <section className="min-h-screen !mt-[5%] flex flex-col items-start gap-5 !pb-8">
       <div className="w-[600px] !mx-auto ">
         <form className="flex flex-col bg-gray-200 !p-5 rounded">
           <div className="flex">
@@ -83,7 +83,8 @@ function Home() {
             <p>@dzek_ludoriba</p>
             <p>Jack Ludoriba</p>
           </div>
-          <div className="text-right !ml-auto">
+          <div className="text-right !ml-auto flex justify-center items-center gap-2">
+            <i className="bxr  bx-calendar"></i>
             <span>09.08.2024.</span>
           </div>
         </div>
@@ -95,10 +96,23 @@ function Home() {
             architecto, repellendus temporibus praesentium est sapiente!
           </p>
           <img src="clif.jpg" className="w-full h-full ovject-cover rounded" />
+          <audio src="https://constel-hr-frontend.s3.eu-central-1.amazonaws.com/54f0f6d5-f53c-47f7-a1aa-bdb731e80597-blob"></audio>
+
+          <audio controls controlsList="nodownload">
+            <source
+              src="https://constel-hr-frontend.s3.eu-central-1.amazonaws.com/54f0f6d5-f53c-47f7-a1aa-bdb731e80597-blob"
+              type="audio/mpeg"
+            />
+            Your browser does not support the audio element.
+          </audio>
         </div>
-        <div className="flex justify-start gap-5 !my-3">
-          <button className="bg-gray-300 rouded !px-3">Like</button>
-          <button className="bg-gray-300 rouded !px-3">Comment</button>
+        <div className="flex justify-start gap-3 !my-3">
+          <button className="bg-gray-300 rouded !px-3 !py-1">
+            <i className="bxr  bx-heart"></i>
+          </button>
+          <button className="bg-gray-300 rouded !px-3 !py-1">
+            <i className="bxr  bx-message-bubble-reply"></i>
+          </button>
         </div>
       </article>
     </section>
