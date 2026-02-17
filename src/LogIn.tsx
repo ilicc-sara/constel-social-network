@@ -20,7 +20,7 @@ function LogIn() {
         <div className="flex flex-col w-full">
           Password
           <input
-            className="bg-white w-full !pl-2"
+            className="bg-white w-full !pl-2  "
             placeholder="Enter your password here..."
             type="password"
           />

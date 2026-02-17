@@ -47,21 +47,49 @@ function Home() {
   }, []);
 
   return (
-    <section className="min-h-screen !mt-[5%]">
-      <div className="w-[fit-content] !mx-auto ">
-        <form className="flex flex-col">
+    <section className="min-h-screen !mt-[5%] flex flex-col items-start gap-5">
+      <div className="w-[600px] !mx-auto ">
+        <form className="flex flex-col bg-gray-200 !p-5">
           <div className="flex">
-            <figure>
-              <img src="logo.jpg" className="w-14 h-14" />
+            <figure className="!mr-4 w-15 aspect-square">
+              <img
+                src="logo.jpg"
+                className="w-full h-full ovject-cover rounded-full"
+              />
             </figure>
             <input
               type="text"
-              className="border-b border-gray-300"
+              className="border-b border-gray-300 w-full focus:outline-none focus:border-blue-500"
               placeholder="What's happening"
             />
           </div>
-          <div className="flex justify-end !py-1">
-            <button className="bg-blue-500 text-white !px-4">New Post</button>
+          <div className="flex justify-end !my-3">
+            <button className="bg-blue-500 text-white !py-2 !px-4 rounded">
+              New Post
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div className="w-[600px] !mx-auto ">
+        <form className="flex flex-col bg-gray-200 !p-4">
+          <div className="flex">
+            <figure className="!mx-4 w-15 aspect-square">
+              <img
+                src="logo.jpg"
+                className="w-full h-full ovject-cover rounded-full"
+              />
+            </figure>
+            <input
+              type="text"
+              className="border-b border-gray-300 w-full focus:outline-none focus:border-blue-500"
+              placeholder="What's happening"
+            />
+          </div>
+          <div className="flex justify-end !my-3">
+            <button className="bg-blue-500 text-white !py-2 !px-4 rounded">
+              New Post
+            </button>
           </div>
         </form>
       </div>
