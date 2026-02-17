@@ -26,7 +26,7 @@ function LogIn() {
           />
         </div>
 
-        <Link to="/home">
+        <Link className="w-full" to="/home">
           <button className="w-full bg-white py-2">Confirm</button>
         </Link>
       </form>
