@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { AudioRecorder, useAudioRecorder } from "react-audio-voice-recorder";
 
 function Home() {
   const token =
@@ -46,6 +47,15 @@ function Home() {
     fetchPosts();
   }, []);
 
+  const recorderControls = useAudioRecorder();
+  const addAudioElement = (blob: any) => {
+    const url = URL.createObjectURL(blob);
+    const audio = document.createElement("audio");
+    audio.src = url;
+    audio.controls = true;
+    document.body.appendChild(audio);
+  };
+
   return (
     <section className="min-h-screen !mt-[5%] flex flex-col items-start gap-5 !pb-8">
       <div className="w-[600px] !mx-auto ">
@@ -69,6 +79,16 @@ function Home() {
             </button>
           </div>
         </form>
+
+        <div>
+          <AudioRecorder
+            onRecordingComplete={(blob) => addAudioElement(blob)}
+            recorderControls={recorderControls}
+          />
+          <button onClick={recorderControls.stopRecording}>
+            Stop recording
+          </button>
+        </div>
       </div>
 
       <article className="w-[600px] !mx-auto flex flex-col bg-gray-200 !p-4 gap-3 rounded">
@@ -98,12 +118,11 @@ function Home() {
           <img src="clif.jpg" className="w-full h-full ovject-cover rounded" />
           <audio src="https://constel-hr-frontend.s3.eu-central-1.amazonaws.com/54f0f6d5-f53c-47f7-a1aa-bdb731e80597-blob"></audio>
 
-          <audio controls controlsList="nodownload">
+          <audio controls controlsList="nodownload" className="w-full">
             <source
               src="https://constel-hr-frontend.s3.eu-central-1.amazonaws.com/54f0f6d5-f53c-47f7-a1aa-bdb731e80597-blob"
               type="audio/mpeg"
             />
-            Your browser does not support the audio element.
           </audio>
         </div>
         <div className="flex justify-start gap-3 !my-3">
