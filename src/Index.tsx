@@ -1,7 +1,26 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { AudioRecorder, useAudioRecorder } from "react-audio-voice-recorder";
 
 function Home() {
+  type Posts = {
+    audio: null | string;
+    comments: number;
+    created_at: string;
+    image: string;
+    liked: boolean;
+    likes: number;
+    post_id: string;
+    text: string;
+    user: {
+      username: string;
+      full_name: string;
+      picture: string;
+    };
+    user_id: string;
+  };
+
+  const [posts, setPosts] = useState<Posts[] | null>(null);
+
   const token =
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMGE0OGEyYjMtZjY2MC00YjIwLWEyNjEtYzllZjE1YzI4NmY3IiwiaWF0IjoxNzcxMzQxMzc3fQ.VqQH-_OR-Ton_-sHeletFnth_Zolto944qTERSSohGQ";
 
@@ -38,6 +57,7 @@ function Home() {
         const posts = await postResponse.json();
 
         console.log("posts response", posts);
+        setPosts(posts);
       } catch (err) {
         console.error(err);
       }
@@ -50,6 +70,7 @@ function Home() {
   const recorderControls = useAudioRecorder();
   const addAudioElement = (blob: any) => {
     const url = URL.createObjectURL(blob);
+    console.log(url);
     const audio = document.createElement("audio");
     audio.src = url;
     audio.controls = true;
