@@ -172,10 +172,11 @@ function Home() {
                   <i className="bxr  bxs-heart"></i>
                 ) : (
                   <i className="bxr  bx-heart"></i>
-                )}
+                )}{" "}
+                {item.likes}
               </button>
               <button className="bg-gray-300 rouded !px-3 !py-1">
-                <i className="bxr  bx-message-bubble-reply"></i>
+                <i className="bxr  bx-message-bubble-reply"></i> {item.comments}
               </button>
             </div>
           </article>
