@@ -1,7 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { AudioRecorder, useAudioRecorder } from "react-audio-voice-recorder";
 
 function Home() {
+  const audioRef = useRef<HTMLDivElement | null>(null);
+  console.log(audioRef);
+
+  const [newAudioSrc, setNewAudioSrc] = useState<string | null>(null);
+
   type Posts = {
     audio: null | string;
     comments: number;
@@ -75,7 +80,10 @@ function Home() {
     const audio = document.createElement("audio");
     audio.src = url;
     audio.controls = true;
-    document.body.appendChild(audio);
+
+    if (audioRef.current) {
+      audioRef.current.appendChild(audio);
+    }
   };
 
   const handleSubmit = (e: any) => {
@@ -120,6 +128,7 @@ function Home() {
           <button onClick={recorderControls.stopRecording}>
             Stop recording
           </button>
+          <div ref={audioRef}></div>
         </div>
       </div>
 
