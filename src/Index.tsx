@@ -1,10 +1,7 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { AudioRecorder, useAudioRecorder } from "react-audio-voice-recorder";
 
 function Home() {
-  const audioRef = useRef<HTMLDivElement | null>(null);
-  console.log(audioRef);
-
   const [newAudioSrc, setNewAudioSrc] = useState<string | null>(null);
 
   type Posts = {
@@ -24,7 +21,15 @@ function Home() {
     user_id: string;
   };
 
+  type User = {
+    email: string;
+    full_name: string;
+    picture: string;
+    username: string;
+  };
+
   const [posts, setPosts] = useState<Posts[] | null>(null);
+  const [user, setUser] = useState<User[] | null>(null);
   const [inputPost, setInputPost] = useState<string>("");
 
   const token =
@@ -42,6 +47,7 @@ function Home() {
           },
         );
         const user = await userResponse.json();
+        setUser(user.account);
 
         console.log("user response", user);
       } catch (err) {
@@ -76,14 +82,7 @@ function Home() {
   const recorderControls = useAudioRecorder();
   const addAudioElement = (blob: any) => {
     const url = URL.createObjectURL(blob);
-    console.log(url);
-    const audio = document.createElement("audio");
-    audio.src = url;
-    audio.controls = true;
-
-    if (audioRef.current) {
-      audioRef.current.appendChild(audio);
-    }
+    setNewAudioSrc(url);
   };
 
   const handleSubmit = (e: any) => {
@@ -92,17 +91,25 @@ function Home() {
     console.log(inputPost);
   };
 
+  const handleDeleteAudio = () => {
+    if (newAudioSrc) {
+      URL.revokeObjectURL(newAudioSrc);
+    }
+
+    setNewAudioSrc(null);
+  };
+
   return (
     <section className="min-h-screen !mt-[5%] flex flex-col items-start gap-5 !pb-8">
       <div className="w-[600px] !mx-auto ">
         <form
           onSubmit={handleSubmit}
-          className="flex flex-col bg-gray-200 !p-5 rounded"
+          className="flex flex-col bg-gray-200 !p-5 rounded gap-2"
         >
           <div className="flex">
             <figure className="!mr-4 w-15 aspect-square">
               <img
-                src="logo.jpg"
+                src={user && user?.picture}
                 className="w-full h-full ovject-cover rounded-full"
               />
             </figure>
@@ -113,23 +120,37 @@ function Home() {
               onChange={(e) => setInputPost(e.target.value)}
             />
           </div>
-          <div className="flex justify-end !my-3">
-            <button className="bg-blue-500 text-white !py-2 !px-4 rounded">
+          <div
+            className={`${newAudioSrc ? "hidden" : ""} w-full flex flex-col gap-1`}
+          >
+            <AudioRecorder
+              onRecordingComplete={(blob) => addAudioElement(blob)}
+              recorderControls={recorderControls}
+            />
+          </div>
+          {newAudioSrc && (
+            <div>
+              <audio
+                src={newAudioSrc}
+                controls={true}
+                className="w-full"
+              ></audio>
+            </div>
+          )}
+          <div className="flex gap-5 justify-end !my-3">
+            {newAudioSrc && (
+              <button
+                onClick={() => handleDeleteAudio()}
+                className="text-2xl text-white !py-2 !px-4 rounded"
+              >
+                <i className="bxr  bx-trash text-red-600 cursor-pointer"></i>
+              </button>
+            )}
+            <button className="bg-blue-500 text-white !py-2 !px-4 rounded cursor-pointer">
               New Post
             </button>
           </div>
         </form>
-
-        <div>
-          <AudioRecorder
-            onRecordingComplete={(blob) => addAudioElement(blob)}
-            recorderControls={recorderControls}
-          />
-          <button onClick={recorderControls.stopRecording}>
-            Stop recording
-          </button>
-          <div ref={audioRef}></div>
-        </div>
       </div>
 
       {posts?.map((item, index) => {
@@ -146,14 +167,18 @@ function Home() {
                 />
               </figure>
               <div>
-                <p>{item.user.username}</p>
+                <p>@{item.user.username}</p>
                 <p>{item.user.full_name}</p>
               </div>
-              <div className="text-right !ml-auto flex justify-center items-center gap-2">
+              <div className="text-right !ml-auto flex justify-center items-center gap-2 text-gray-500">
                 <i className="bxr  bx-calendar"></i>
                 <span>
                   {item.created_at.split("T")[0].split("-").reverse().join(".")}
                 </span>
+
+                <button className="cursor-pointer flex justify-center items-center">
+                  <i className="bxr  bx-trash text-red-600 text-lg "></i>
+                </button>
               </div>
             </div>
             <div>
@@ -176,7 +201,7 @@ function Home() {
               )}
             </div>
             <div className="flex justify-start gap-3 !my-3">
-              <button className="bg-gray-300 rouded !px-3 !py-1">
+              <button className="bg-gray-300 rouded !px-3 !py-1  flex justify-center items-center gap-1">
                 {item.liked ? (
                   <i className="bxr  bxs-heart"></i>
                 ) : (
@@ -184,7 +209,7 @@ function Home() {
                 )}{" "}
                 {item.likes}
               </button>
-              <button className="bg-gray-300 rouded !px-3 !py-1">
+              <button className="bg-gray-300 rouded !px-3 !py-1  flex justify-center items-center gap-1">
                 <i className="bxr  bx-message-bubble-reply"></i> {item.comments}
               </button>
             </div>

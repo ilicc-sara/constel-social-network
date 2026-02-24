@@ -83,3 +83,12 @@ He5r4dOVdy9x6IT
 
 <i className="bxr  bx-calendar"></i>
 <i className="bxr  bx-trash"></i>
+
+const audioRef = useRef<HTMLDivElement | null>(null);
+
+<button
+              className="bg-red-600 text-white text-sm !px-2 !py-1 rounded w-[fit-content]"
+              onClick={recorderControls.stopRecording}
+            >
+Stop recording
+</button>
