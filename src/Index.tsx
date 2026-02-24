@@ -123,7 +123,7 @@ function Home() {
         </div>
       </div>
 
-      <article className="w-[600px] !mx-auto flex flex-col bg-gray-200 !p-4 gap-3 rounded">
+      {/* <article className="w-[600px] !mx-auto flex flex-col bg-gray-200 !p-4 gap-3 rounded">
         <div className="flex items-start">
           <figure className="!mr-4 w-15 aspect-square">
             <img
@@ -165,21 +165,24 @@ function Home() {
             <i className="bxr  bx-message-bubble-reply"></i>
           </button>
         </div>
-      </article>
+      </article> */}
 
       {posts?.map((item, index) => {
         return (
-          <article className="w-[600px] !mx-auto flex flex-col bg-gray-200 !p-4 gap-3 rounded">
+          <article
+            key={index}
+            className="w-[600px] !mx-auto flex flex-col bg-gray-200 !p-4 gap-3 rounded"
+          >
             <div className="flex items-start">
               <figure className="!mr-4 w-15 aspect-square">
                 <img
-                  src="profile-pic.jpg"
-                  className="w-full h-full ovject-cover rounded-full"
+                  src={item.user.picture}
+                  className="w-full h-full object-cover rounded-full"
                 />
               </figure>
               <div>
-                <p>@dzek_ludoriba</p>
-                <p>Jack Ludoriba</p>
+                <p>{item.user.username}</p>
+                <p>{item.user.full_name}</p>
               </div>
               <div className="text-right !ml-auto flex justify-center items-center gap-2">
                 <i className="bxr  bx-calendar"></i>
@@ -187,16 +190,13 @@ function Home() {
               </div>
             </div>
             <div>
-              <p>
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Animi,
-                delectus soluta tenetur inventore, at doloremque nulla ratione
-                aut facere nostrum explicabo necessitatibus blanditiis quibusdam
-                architecto, repellendus temporibus praesentium est sapiente!
-              </p>
-              <img
-                src="clif.jpg"
-                className="w-full h-full ovject-cover rounded"
-              />
+              {item.text && <p>{item.text}</p>}
+              {item.image && (
+                <img
+                  src={`${item.image}`}
+                  className="w-full h-full object-cover rounded"
+                />
+              )}
               <audio src="https://constel-hr-frontend.s3.eu-central-1.amazonaws.com/54f0f6d5-f53c-47f7-a1aa-bdb731e80597-blob"></audio>
 
               <audio controls controlsList="nodownload" className="w-full">
