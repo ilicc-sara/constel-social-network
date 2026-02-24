@@ -123,50 +123,6 @@ function Home() {
         </div>
       </div>
 
-      {/* <article className="w-[600px] !mx-auto flex flex-col bg-gray-200 !p-4 gap-3 rounded">
-        <div className="flex items-start">
-          <figure className="!mr-4 w-15 aspect-square">
-            <img
-              src="profile-pic.jpg"
-              className="w-full h-full ovject-cover rounded-full"
-            />
-          </figure>
-          <div>
-            <p>@dzek_ludoriba</p>
-            <p>Jack Ludoriba</p>
-          </div>
-          <div className="text-right !ml-auto flex justify-center items-center gap-2">
-            <i className="bxr  bx-calendar"></i>
-            <span>09.08.2024.</span>
-          </div>
-        </div>
-        <div>
-          <p>
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Animi,
-            delectus soluta tenetur inventore, at doloremque nulla ratione aut
-            facere nostrum explicabo necessitatibus blanditiis quibusdam
-            architecto, repellendus temporibus praesentium est sapiente!
-          </p>
-          <img src="clif.jpg" className="w-full h-full ovject-cover rounded" />
-          <audio src="https://constel-hr-frontend.s3.eu-central-1.amazonaws.com/54f0f6d5-f53c-47f7-a1aa-bdb731e80597-blob"></audio>
-
-          <audio controls controlsList="nodownload" className="w-full">
-            <source
-              src="https://constel-hr-frontend.s3.eu-central-1.amazonaws.com/54f0f6d5-f53c-47f7-a1aa-bdb731e80597-blob"
-              type="audio/mpeg"
-            />
-          </audio>
-        </div>
-        <div className="flex justify-start gap-3 !my-3">
-          <button className="bg-gray-300 rouded !px-3 !py-1">
-            <i className="bxr  bx-heart"></i>
-          </button>
-          <button className="bg-gray-300 rouded !px-3 !py-1">
-            <i className="bxr  bx-message-bubble-reply"></i>
-          </button>
-        </div>
-      </article> */}
-
       {posts?.map((item, index) => {
         return (
           <article
@@ -186,7 +142,9 @@ function Home() {
               </div>
               <div className="text-right !ml-auto flex justify-center items-center gap-2">
                 <i className="bxr  bx-calendar"></i>
-                <span>09.08.2024.</span>
+                <span>
+                  {item.created_at.split("T")[0].split("-").reverse().join(".")}
+                </span>
               </div>
             </div>
             <div>
@@ -197,18 +155,24 @@ function Home() {
                   className="w-full h-full object-cover rounded"
                 />
               )}
-              <audio src="https://constel-hr-frontend.s3.eu-central-1.amazonaws.com/54f0f6d5-f53c-47f7-a1aa-bdb731e80597-blob"></audio>
 
-              <audio controls controlsList="nodownload" className="w-full">
-                <source
-                  src="https://constel-hr-frontend.s3.eu-central-1.amazonaws.com/54f0f6d5-f53c-47f7-a1aa-bdb731e80597-blob"
-                  type="audio/mpeg"
-                />
-              </audio>
+              {item.audio && (
+                <>
+                  <audio src={item.audio}></audio>
+
+                  <audio controls controlsList="nodownload" className="w-full">
+                    <source src={item.audio} type="audio/mpeg" />
+                  </audio>
+                </>
+              )}
             </div>
             <div className="flex justify-start gap-3 !my-3">
               <button className="bg-gray-300 rouded !px-3 !py-1">
-                <i className="bxr  bx-heart"></i>
+                {item.liked ? (
+                  <i className="bxr  bxs-heart"></i>
+                ) : (
+                  <i className="bxr  bx-heart"></i>
+                )}
               </button>
               <button className="bg-gray-300 rouded !px-3 !py-1">
                 <i className="bxr  bx-message-bubble-reply"></i>
