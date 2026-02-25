@@ -48,26 +48,6 @@ function Home() {
 
   console.log(userId);
 
-  // const logOut = async () => {
-  //   try {
-  //     await fetch("https://api.hr.constel.co/api/v1/logout", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMGE0OGEyYjMtZjY2MC00YjIwLWEyNjEtYzllZjE1YzI4NmY3IiwiaWF0IjoxNzcyMDE4MDU2fQ.kUS_tGpgzwBUgdKdP_G68NlARmnli8qpwf6R5SpfZEo`,
-  //       },
-  //     });
-
-  //     localStorage.removeItem("userToken");
-  //   } catch (error) {
-  //     console.error("Logout failed", error);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   logOut();
-  // }, []);
-
   const recorderControls = useAudioRecorder();
   const addAudioElement = (blob: any) => {
     const url = URL.createObjectURL(blob);
@@ -93,6 +73,50 @@ function Home() {
     setUserId(null);
   };
 
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const userResponse = await fetch(
+          "https://api.hr.constel.co/api/v1/accounts/me",
+          {
+            headers: {
+              Authorization: `Bearer ${userId}`,
+            },
+          },
+        );
+        const user = await userResponse.json();
+        setUser(user.account);
+
+        console.log("user response", user);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    const fetchPosts = async () => {
+      try {
+        const postResponse = await fetch(
+          "https://api.hr.constel.co/api/v1/posts",
+          {
+            headers: {
+              Authorization: `Bearer ${userId}`,
+            },
+          },
+        );
+
+        const posts = await postResponse.json();
+
+        console.log("posts response", posts);
+        setPosts(posts.posts);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchUser();
+    fetchPosts();
+  }, [userId]);
+
   return (
     <section className="min-h-screen !mt-[5%] flex flex-col items-start gap-5 !pb-8">
       <div className="absolute top-10 right-10">
@@ -111,7 +135,7 @@ function Home() {
           <div className="flex">
             <figure className="!mr-4 w-15 aspect-square">
               <img
-                // src={user && user?.picture}
+                src={user && user?.picture}
                 className="w-full h-full ovject-cover rounded-full"
               />
             </figure>
