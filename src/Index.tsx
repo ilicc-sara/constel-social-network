@@ -8,7 +8,7 @@ function Home() {
   const [user, setUser] = useState<User[] | null>(null);
   const [inputPost, setInputPost] = useState<string>("");
 
-  const [userId, setUserId] = useState<string | null>(null);
+  const [tokenState, setTokenState] = useState<string | null>(null);
 
   const navigate = useNavigate();
 
@@ -38,15 +38,18 @@ function Home() {
 
   useEffect(() => {
     const token = localStorage.getItem("jwt");
+    console.log("token", token);
+
     if (token) {
-      setUserId(token);
+      setTokenState(token);
     } else {
       console.error();
+      setTokenState(null);
       navigate("/login");
     }
-  }, [userId]);
+  }, []);
 
-  console.log(userId);
+  // console.log(userId);
 
   const recorderControls = useAudioRecorder();
   const addAudioElement = (blob: any) => {
@@ -57,7 +60,7 @@ function Home() {
   const handleSubmit = (e: any) => {
     e.preventDefault();
 
-    console.log(inputPost);
+    // console.log(inputPost);
   };
 
   const handleDeleteAudio = () => {
@@ -70,7 +73,8 @@ function Home() {
 
   const handleLogOut = () => {
     localStorage.removeItem("jwt");
-    setUserId(null);
+    setTokenState(null);
+    navigate("/login");
   };
 
   useEffect(() => {
@@ -80,14 +84,14 @@ function Home() {
           "https://api.hr.constel.co/api/v1/accounts/me",
           {
             headers: {
-              Authorization: `Bearer ${userId}`,
+              Authorization: `Bearer ${tokenState}`,
             },
           },
         );
         const user = await userResponse.json();
         setUser(user.account);
 
-        console.log("user response", user);
+        // console.log("user response", user);
       } catch (err) {
         console.error(err);
       }
@@ -99,14 +103,14 @@ function Home() {
           "https://api.hr.constel.co/api/v1/posts",
           {
             headers: {
-              Authorization: `Bearer ${userId}`,
+              Authorization: `Bearer ${tokenState}`,
             },
           },
         );
 
         const posts = await postResponse.json();
 
-        console.log("posts response", posts);
+        // console.log("posts response", posts);
         setPosts(posts.posts);
       } catch (err) {
         console.error(err);
@@ -115,7 +119,7 @@ function Home() {
 
     fetchUser();
     fetchPosts();
-  }, [userId]);
+  }, [tokenState]);
 
   return (
     <section className="min-h-screen !mt-[2%] flex flex-col items-start gap-5 !pb-8">

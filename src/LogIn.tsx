@@ -25,6 +25,7 @@ function LogIn() {
     try {
       const userResponse = await fetch(
         "https://api.hr.constel.co/api/v1/login",
+
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -36,15 +37,13 @@ function LogIn() {
       );
       const data = await userResponse.json();
 
-      if (
-        data &&
-        inputEmail === DEMO_EMAIL &&
-        inputPassword === DEMO_PASSWORD
-      ) {
+      if (data.token) {
         localStorage.setItem("jwt", data.token);
         navigate("/");
         setInputEmail("");
         setInputPassword("");
+      } else {
+        navigate("/login");
       }
     } catch (err) {
       console.error(err);
