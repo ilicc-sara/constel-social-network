@@ -1,6 +1,9 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 
+const DEMO_EMAIL = "malesija.nemanja@gmail.com";
+const DEMO_PASSWORD = "He5r4dOVdy9x6IT";
+
 function LogIn() {
   const [isActive, setIsActive] = useState(false);
 
@@ -15,7 +18,31 @@ function LogIn() {
     }
   }, [isActive, inputEmail, inputPassword]);
 
-  console.log(isActive);
+  useEffect(() => {
+    const logIn = async () => {
+      try {
+        const userResponse = await fetch(
+          "https://api.hr.constel.co/api/v1/login",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              email: inputEmail,
+              password: inputPassword,
+            }),
+          },
+        );
+        const data = await userResponse.json();
+        localStorage.setItem("token", data.token); // Store token
+
+        console.log("ma ima da ga napravim", data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    logIn();
+  }, []);
 
   return (
     <section className="min-h-screen !mt-[5%]">

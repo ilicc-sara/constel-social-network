@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { AudioRecorder, useAudioRecorder } from "react-audio-voice-recorder";
+import { Link, useNavigate } from "react-router-dom";
 
 function Home() {
   const [newAudioSrc, setNewAudioSrc] = useState<string | null>(null);
@@ -9,13 +10,15 @@ function Home() {
 
   const [userId, setUserId] = useState<string | null>(null);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     const token = localStorage.getItem("sb-yyocycmzxqjdvkwqlpzd-auth-token");
     if (token) {
       setUserId(JSON.parse(token).jwt);
     } else {
       console.error();
-      // navigate("/login");
+      navigate("/login");
     }
   }, []);
 
@@ -131,44 +134,81 @@ function Home() {
   //   );
   // }, []);
 
-  useEffect(() => {
-    const logIn = async () => {
-      try {
-        const userResponse = await fetch(
-          "https://api.hr.constel.co/api/v1/login",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              email: "malesija.nemanja@gmail.com",
-              password: "He5r4dOVdy9x6IT",
-            }),
+  // useEffect(() => {
+  //   const logIn = async () => {
+  //     try {
+  //       const userResponse = await fetch(
+  //         "https://api.hr.constel.co/api/v1/login",
+  //         {
+  //           method: "POST",
+  //           headers: { "Content-Type": "application/json" },
+  //           body: JSON.stringify({
+  //             email: "malesija.nemanja@gmail.com",
+  //             password: "He5r4dOVdy9x6IT",
+  //           }),
+  //         },
+  //       );
+  //       const data = await userResponse.json();
+  //       localStorage.setItem("token", data.token); // Store token
+
+  //       console.log("ma ima da ga napravim", data);
+
+  //       // Subsequent request
+  //       // const protectedData = await fetch(
+  //       //   "https://api.hr.constel.co/api/v1/posts",
+  //       //   {
+  //       //     headers: {
+  //       //       Authorization: `Bearer ${localStorage.getItem("token")}`,
+  //       //     },
+  //       //   },
+  //       // );
+  //     } catch (err) {
+  //       console.error(err);
+  //     }
+  //   };
+
+  //   logIn();
+  // }, []);
+
+  const handleLogOut = async () => {
+    try {
+      const userResponse = await fetch(
+        "https://api.hr.constel.co/api/v1/logout",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
           },
-        );
-        const data = await userResponse.json();
-        localStorage.setItem("token", data.token); // Store token
+        },
+      );
+      const data = await userResponse.json();
+      localStorage.setItem("token", data.token); // Store token
 
-        console.log("ma ima da ga napravim", data);
+      console.log("", data);
 
-        // Subsequent request
-        // const protectedData = await fetch(
-        //   "https://api.hr.constel.co/api/v1/posts",
-        //   {
-        //     headers: {
-        //       Authorization: `Bearer ${localStorage.getItem("token")}`,
-        //     },
-        //   },
-        // );
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    logIn();
-  }, []);
+      // Subsequent request
+      // const protectedData = await fetch(
+      //   "https://api.hr.constel.co/api/v1/posts",
+      //   {
+      //     headers: {
+      //       Authorization: `Bearer ${localStorage.getItem("token")}`,
+      //     },
+      //   },
+      // );
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <section className="min-h-screen !mt-[5%] flex flex-col items-start gap-5 !pb-8">
+      <div className="absolute top-10 right-10">
+        <button
+          className="bg-red-500 text-white !px-2 !py-1 rounded"
+          onClick={() => handleLogOut()}
+        >
+          Log Out
+        </button>
+      </div>
       <div className="w-[600px] !mx-auto ">
         <form
           onSubmit={handleSubmit}
