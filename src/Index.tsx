@@ -1,8 +1,29 @@
 import { useEffect, useState } from "react";
 import { AudioRecorder, useAudioRecorder } from "react-audio-voice-recorder";
+import LogIn from "./LogIn";
 
 function Home() {
   const [newAudioSrc, setNewAudioSrc] = useState<string | null>(null);
+  const [posts, setPosts] = useState<Posts[] | null>(null);
+  const [user, setUser] = useState<User[] | null>(null);
+  const [inputPost, setInputPost] = useState<string>("");
+
+  const [userId, setUserId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem("sb-yyocycmzxqjdvkwqlpzd-auth-token");
+    if (token) {
+      setUserId(JSON.parse(token).jwt);
+    } else {
+      console.error();
+      // navigate("/login");
+    }
+  }, []);
+
+  const token =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMGE0OGEyYjMtZjY2MC00YjIwLWEyNjEtYzllZjE1YzI4NmY3IiwiaWF0IjoxNzcxMzQxMzc3fQ.VqQH-_OR-Ton_-sHeletFnth_Zolto944qTERSSohGQ";
+  console.log("user id:", userId);
+  console.log("token:", token);
 
   type Posts = {
     audio: null | string;
@@ -27,13 +48,6 @@ function Home() {
     picture: string;
     username: string;
   };
-
-  const [posts, setPosts] = useState<Posts[] | null>(null);
-  const [user, setUser] = useState<User[] | null>(null);
-  const [inputPost, setInputPost] = useState<string>("");
-
-  const token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMGE0OGEyYjMtZjY2MC00YjIwLWEyNjEtYzllZjE1YzI4NmY3IiwiaWF0IjoxNzcxMzQxMzc3fQ.VqQH-_OR-Ton_-sHeletFnth_Zolto944qTERSSohGQ";
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -98,6 +112,61 @@ function Home() {
 
     setNewAudioSrc(null);
   };
+
+  // useEffect(() => {
+  //   const response = await fetch("https://api.hr.constel.co/api/v1/login", {
+  //     method: "POST",
+  //     headers: { "Content-Type": "application/json" },
+  //     body: JSON.stringify({ 'malesija.nemanja@gmail.com', 'He5r4dOVdy9x6IT' }),
+  //   });
+
+  //   const data = await response.json();
+  //   localStorage.setItem("token", data.token); // Store token
+
+  //   // Subsequent request
+  //   const protectedData = await fetch(
+  //     "https://api.hr.constel.co/api/v1/posts",
+  //     {
+  //       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+  //     },
+  //   );
+  // }, []);
+
+  useEffect(() => {
+    const logIn = async () => {
+      try {
+        const userResponse = await fetch(
+          "https://api.hr.constel.co/api/v1/login",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              email: "malesija.nemanja@gmail.com",
+              password: "He5r4dOVdy9x6IT",
+            }),
+          },
+        );
+        const data = await userResponse.json();
+        localStorage.setItem("token", data.token); // Store token
+
+        console.log("ma ima da ga napravim", data);
+
+        // Subsequent request
+        // const protectedData = await fetch(
+        //   "https://api.hr.constel.co/api/v1/posts",
+        //   {
+        //     headers: {
+        //       Authorization: `Bearer ${localStorage.getItem("token")}`,
+        //     },
+        //   },
+        // );
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    logIn();
+  }, []);
 
   return (
     <section className="min-h-screen !mt-[5%] flex flex-col items-start gap-5 !pb-8">
