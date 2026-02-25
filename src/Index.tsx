@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { AudioRecorder, useAudioRecorder } from "react-audio-voice-recorder";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function Home() {
   const [newAudioSrc, setNewAudioSrc] = useState<string | null>(null);
@@ -118,7 +118,7 @@ function Home() {
   }, [userId]);
 
   return (
-    <section className="min-h-screen !mt-[5%] flex flex-col items-start gap-5 !pb-8">
+    <section className="min-h-screen !mt-[2%] flex flex-col items-start gap-5 !pb-8">
       <div className="absolute top-10 right-10">
         <button
           className="bg-red-500 text-white !px-2 !py-1 rounded cursor-pointer"

@@ -35,11 +35,17 @@ function LogIn() {
         },
       );
       const data = await userResponse.json();
-      localStorage.setItem("jwt", data.token); // Store token
 
-      navigate("/");
-      setInputEmail("");
-      setInputPassword("");
+      if (
+        data &&
+        inputEmail === DEMO_EMAIL &&
+        inputPassword === DEMO_PASSWORD
+      ) {
+        localStorage.setItem("jwt", data.token);
+        navigate("/");
+        setInputEmail("");
+        setInputPassword("");
+      }
     } catch (err) {
       console.error(err);
     }
@@ -76,8 +82,8 @@ function LogIn() {
         </div>
 
         <button
-          onClick={(e) => logIn(e)}
-          className={`w-full py-2 text-gray-100 transition duration-300 rounded cursor-pointer ${isActive ? "bg-blue-500 hover:bg-blue-600" : "bg-gray-300 hover:bg-gray-400"}`}
+          className={`w-full py-2 text-gray-100 transition duration-300 rounded cursor-pointer 
+            ${isActive ? "bg-blue-500 hover:bg-blue-600" : "bg-gray-300 hover:bg-gray-400"}`}
         >
           Confirm
         </button>
