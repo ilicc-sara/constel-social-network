@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { AudioRecorder, useAudioRecorder } from "react-audio-voice-recorder";
-import LogIn from "./LogIn";
 
 function Home() {
   const [newAudioSrc, setNewAudioSrc] = useState<string | null>(null);
