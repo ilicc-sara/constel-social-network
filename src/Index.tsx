@@ -37,14 +37,14 @@ function Home() {
   };
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("jwt");
     if (token) {
       setUserId(token);
     } else {
       console.error();
       navigate("/login");
     }
-  }, []);
+  }, [userId]);
 
   console.log(userId);
 
@@ -88,9 +88,9 @@ function Home() {
     setNewAudioSrc(null);
   };
 
-  const handleLogOut = async () => {
-    localStorage.removeItem("token");
-    console.log("logout");
+  const handleLogOut = () => {
+    localStorage.removeItem("jwt");
+    setUserId(null);
   };
 
   return (

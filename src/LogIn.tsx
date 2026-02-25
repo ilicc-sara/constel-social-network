@@ -35,7 +35,7 @@ function LogIn() {
         },
       );
       const data = await userResponse.json();
-      localStorage.setItem("token", data.token); // Store token
+      localStorage.setItem("jwt", data.token); // Store token
 
       navigate("/");
       setInputEmail("");
