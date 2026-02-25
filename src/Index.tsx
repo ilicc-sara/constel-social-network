@@ -12,21 +12,6 @@ function Home() {
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const token = localStorage.getItem("sb-yyocycmzxqjdvkwqlpzd-auth-token");
-    if (token) {
-      setUserId(JSON.parse(token).jwt);
-    } else {
-      console.error();
-      navigate("/login");
-    }
-  }, []);
-
-  const token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMGE0OGEyYjMtZjY2MC00YjIwLWEyNjEtYzllZjE1YzI4NmY3IiwiaWF0IjoxNzcxMzQxMzc3fQ.VqQH-_OR-Ton_-sHeletFnth_Zolto944qTERSSohGQ";
-  console.log("user id:", userId);
-  console.log("token:", token);
-
   type Posts = {
     audio: null | string;
     comments: number;
@@ -52,48 +37,36 @@ function Home() {
   };
 
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const userResponse = await fetch(
-          "https://api.hr.constel.co/api/v1/accounts/me",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          },
-        );
-        const user = await userResponse.json();
-        setUser(user.account);
-
-        console.log("user response", user);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    const fetchPosts = async () => {
-      try {
-        const postResponse = await fetch(
-          "https://api.hr.constel.co/api/v1/posts",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          },
-        );
-
-        const posts = await postResponse.json();
-
-        console.log("posts response", posts);
-        setPosts(posts.posts);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    fetchUser();
-    fetchPosts();
+    const token = localStorage.getItem("token");
+    if (token) {
+      setUserId(token);
+    } else {
+      console.error();
+      navigate("/login");
+    }
   }, []);
+
+  console.log(userId);
+
+  // const logOut = async () => {
+  //   try {
+  //     await fetch("https://api.hr.constel.co/api/v1/logout", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMGE0OGEyYjMtZjY2MC00YjIwLWEyNjEtYzllZjE1YzI4NmY3IiwiaWF0IjoxNzcyMDE4MDU2fQ.kUS_tGpgzwBUgdKdP_G68NlARmnli8qpwf6R5SpfZEo`,
+  //       },
+  //     });
+
+  //     localStorage.removeItem("userToken");
+  //   } catch (error) {
+  //     console.error("Logout failed", error);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   logOut();
+  // }, []);
 
   const recorderControls = useAudioRecorder();
   const addAudioElement = (blob: any) => {
@@ -115,95 +88,16 @@ function Home() {
     setNewAudioSrc(null);
   };
 
-  // useEffect(() => {
-  //   const response = await fetch("https://api.hr.constel.co/api/v1/login", {
-  //     method: "POST",
-  //     headers: { "Content-Type": "application/json" },
-  //     body: JSON.stringify({ 'malesija.nemanja@gmail.com', 'He5r4dOVdy9x6IT' }),
-  //   });
-
-  //   const data = await response.json();
-  //   localStorage.setItem("token", data.token); // Store token
-
-  //   // Subsequent request
-  //   const protectedData = await fetch(
-  //     "https://api.hr.constel.co/api/v1/posts",
-  //     {
-  //       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-  //     },
-  //   );
-  // }, []);
-
-  // useEffect(() => {
-  //   const logIn = async () => {
-  //     try {
-  //       const userResponse = await fetch(
-  //         "https://api.hr.constel.co/api/v1/login",
-  //         {
-  //           method: "POST",
-  //           headers: { "Content-Type": "application/json" },
-  //           body: JSON.stringify({
-  //             email: "malesija.nemanja@gmail.com",
-  //             password: "He5r4dOVdy9x6IT",
-  //           }),
-  //         },
-  //       );
-  //       const data = await userResponse.json();
-  //       localStorage.setItem("token", data.token); // Store token
-
-  //       console.log("ma ima da ga napravim", data);
-
-  //       // Subsequent request
-  //       // const protectedData = await fetch(
-  //       //   "https://api.hr.constel.co/api/v1/posts",
-  //       //   {
-  //       //     headers: {
-  //       //       Authorization: `Bearer ${localStorage.getItem("token")}`,
-  //       //     },
-  //       //   },
-  //       // );
-  //     } catch (err) {
-  //       console.error(err);
-  //     }
-  //   };
-
-  //   logIn();
-  // }, []);
-
   const handleLogOut = async () => {
-    try {
-      const userResponse = await fetch(
-        "https://api.hr.constel.co/api/v1/logout",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
-      const data = await userResponse.json();
-      localStorage.setItem("token", data.token); // Store token
-
-      console.log("", data);
-
-      // Subsequent request
-      // const protectedData = await fetch(
-      //   "https://api.hr.constel.co/api/v1/posts",
-      //   {
-      //     headers: {
-      //       Authorization: `Bearer ${localStorage.getItem("token")}`,
-      //     },
-      //   },
-      // );
-    } catch (err) {
-      console.error(err);
-    }
+    localStorage.removeItem("token");
+    console.log("logout");
   };
 
   return (
     <section className="min-h-screen !mt-[5%] flex flex-col items-start gap-5 !pb-8">
       <div className="absolute top-10 right-10">
         <button
-          className="bg-red-500 text-white !px-2 !py-1 rounded"
+          className="bg-red-500 text-white !px-2 !py-1 rounded cursor-pointer"
           onClick={() => handleLogOut()}
         >
           Log Out
@@ -217,7 +111,7 @@ function Home() {
           <div className="flex">
             <figure className="!mr-4 w-15 aspect-square">
               <img
-                src={user && user?.picture}
+                // src={user && user?.picture}
                 className="w-full h-full ovject-cover rounded-full"
               />
             </figure>

@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 
 const DEMO_EMAIL = "malesija.nemanja@gmail.com";
@@ -10,6 +10,8 @@ function LogIn() {
   const [inputEmail, setInputEmail] = useState("");
   const [inputPassword, setInputPassword] = useState("");
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     if (inputEmail.includes("@") && inputPassword.length > 8) {
       setIsActive(true);
@@ -18,31 +20,30 @@ function LogIn() {
     }
   }, [isActive, inputEmail, inputPassword]);
 
-  useEffect(() => {
-    const logIn = async () => {
-      try {
-        const userResponse = await fetch(
-          "https://api.hr.constel.co/api/v1/login",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              email: inputEmail,
-              password: inputPassword,
-            }),
-          },
-        );
-        const data = await userResponse.json();
-        localStorage.setItem("token", data.token); // Store token
+  const logIn = async (e: any) => {
+    e.preventDefault();
+    try {
+      const userResponse = await fetch(
+        "https://api.hr.constel.co/api/v1/login",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email: inputEmail,
+            password: inputPassword,
+          }),
+        },
+      );
+      const data = await userResponse.json();
+      localStorage.setItem("token", data.token); // Store token
 
-        console.log("ma ima da ga napravim", data);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    logIn();
-  }, []);
+      navigate("/");
+      setInputEmail("");
+      setInputPassword("");
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <section className="min-h-screen !mt-[5%]">
@@ -50,7 +51,10 @@ function LogIn() {
         <img className="w-12 h-12" src="logo.jpg" />
       </div>
 
-      <form className="w-104 h-[fit-content] !px-14 !py-9 flex flex-col !mx-auto items-start justify-start gap-5 rounded-xl !my-5">
+      <form
+        onSubmit={logIn}
+        className="w-104 h-[fit-content] !px-14 !py-9 flex flex-col !mx-auto items-start justify-start gap-5 rounded-xl !my-5"
+      >
         <div className="flex flex-col w-full">
           Email
           <input
@@ -71,13 +75,12 @@ function LogIn() {
           />
         </div>
 
-        <Link className="w-full" to="/home">
-          <button
-            className={`w-full py-2 text-gray-100 transition duration-300 rounded cursor-pointer ${isActive ? "bg-blue-500 hover:bg-blue-600" : "bg-gray-300 hover:bg-gray-400"}`}
-          >
-            Confirm
-          </button>
-        </Link>
+        <button
+          onClick={(e) => logIn(e)}
+          className={`w-full py-2 text-gray-100 transition duration-300 rounded cursor-pointer ${isActive ? "bg-blue-500 hover:bg-blue-600" : "bg-gray-300 hover:bg-gray-400"}`}
+        >
+          Confirm
+        </button>
       </form>
     </section>
   );
