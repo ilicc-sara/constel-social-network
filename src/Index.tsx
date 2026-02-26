@@ -5,18 +5,28 @@ import { useNavigate } from "react-router-dom";
 function Home() {
   const [newAudioSrc, setNewAudioSrc] = useState<string | null>(null);
   const [posts, setPosts] = useState<Posts[] | null>(null);
-  const [user, setUser] = useState<User[] | null>(null);
+  const [user, setUser] = useState<User | undefined>(undefined);
   const [inputPost, setInputPost] = useState<string>("");
 
   const [tokenState, setTokenState] = useState<string | null>(null);
 
+  const [isActive, setIsActive] = useState(false);
+
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (inputPost !== "" || newAudioSrc) {
+      setIsActive(true);
+    } else {
+      setIsActive(false);
+    }
+  }, [inputPost, newAudioSrc]);
 
   type Posts = {
     audio: null | string;
     comments: number;
     created_at: string;
-    image: string;
+    image: string | null;
     liked: boolean;
     likes: number;
     post_id: string;
@@ -49,18 +59,10 @@ function Home() {
     }
   }, []);
 
-  // console.log(userId);
-
   const recorderControls = useAudioRecorder();
   const addAudioElement = (blob: any) => {
     const url = URL.createObjectURL(blob);
     setNewAudioSrc(url);
-  };
-
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
-
-    // console.log(inputPost);
   };
 
   const handleDeleteAudio = () => {
@@ -121,6 +123,34 @@ function Home() {
     fetchPosts();
   }, [tokenState]);
 
+  const newPost: Posts = {
+    audio: null,
+    comments: 0,
+    created_at: "",
+    image: "",
+    liked: false,
+    likes: 0,
+    post_id: "",
+    text: "",
+    user: {
+      username: "",
+      full_name: "",
+      picture: "",
+    },
+    user_id: "",
+  };
+
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+
+    // console.log(inputPost);
+    // const postResponse = await fetch("https://api.hr.constel.co/api/v1/posts", {
+    //   method: "POST",
+    //   headers: { "Content-Type": "application/json" },
+    //   body: JSON.stringify(newPost),
+    // });
+  };
+
   return (
     <section className="min-h-screen !mt-[2%] flex flex-col items-start gap-5 !pb-8">
       <div className="absolute top-10 right-10">
@@ -176,7 +206,11 @@ function Home() {
                 <i className="bxr  bx-trash text-red-600 cursor-pointer"></i>
               </button>
             )}
-            <button className="bg-blue-500 text-white !py-2 !px-4 rounded cursor-pointer">
+
+            <button
+              className={`!py-2 !px-4 text-gray-100 transition duration-300 rounded cursor-pointer 
+            ${isActive ? "bg-blue-500 hover:bg-blue-600" : "bg-gray-300 hover:bg-gray-400"}`}
+            >
               New Post
             </button>
           </div>
