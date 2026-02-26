@@ -112,7 +112,7 @@ function Home() {
 
         const posts = await postResponse.json();
 
-        // console.log("posts response", posts);
+        console.log("posts response", posts);
         setPosts(posts.posts);
       } catch (err) {
         console.error(err);
@@ -123,32 +123,37 @@ function Home() {
     fetchPosts();
   }, [tokenState]);
 
-  const newPost: Posts = {
-    audio: null,
-    comments: 0,
-    created_at: "",
-    image: "",
-    liked: false,
-    likes: 0,
-    post_id: "",
-    text: "",
-    user: {
-      username: "",
-      full_name: "",
-      picture: "",
-    },
-    user_id: "",
-  };
-
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
-    // console.log(inputPost);
-    // const postResponse = await fetch("https://api.hr.constel.co/api/v1/posts", {
-    //   method: "POST",
-    //   headers: { "Content-Type": "application/json" },
-    //   body: JSON.stringify(newPost),
-    // });
+    console.log(inputPost);
+    try {
+      const postResponse = await fetch(
+        "https://api.hr.constel.co/api/v1/posts",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${tokenState}`,
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          body:
+            "text=" +
+            encodeURIComponent(inputPost) +
+            "&audio=" +
+            encodeURIComponent(`${newAudioSrc ? newAudioSrc : ""}`),
+        },
+      );
+      const data = await postResponse.json();
+
+      if (!postResponse.ok) {
+        console.log("Nije uspelo", data.message);
+        return;
+      }
+
+      console.log("uspelo je");
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (
@@ -177,6 +182,7 @@ function Home() {
               type="text"
               className="border-b border-gray-300 w-full focus:outline-none focus:border-blue-500"
               placeholder="What's happening"
+              value={inputPost}
               onChange={(e) => setInputPost(e.target.value)}
             />
           </div>
@@ -210,6 +216,7 @@ function Home() {
             <button
               className={`!py-2 !px-4 text-gray-100 transition duration-300 rounded cursor-pointer 
             ${isActive ? "bg-blue-500 hover:bg-blue-600" : "bg-gray-300 hover:bg-gray-400"}`}
+              disabled={!isActive}
             >
               New Post
             </button>

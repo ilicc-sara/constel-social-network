@@ -92,6 +92,7 @@ function LogIn() {
         <button
           className={`w-full py-2 text-gray-100 transition duration-300 rounded cursor-pointer 
             ${isActive ? "bg-blue-500 hover:bg-blue-600" : "bg-gray-300 hover:bg-gray-400"}`}
+          disabled={!isActive}
         >
           Confirm
         </button>
