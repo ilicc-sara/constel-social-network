@@ -297,3 +297,5 @@ useEffect(() => {
     }
   };
 ```
+
+min-h-screen

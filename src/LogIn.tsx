@@ -1,5 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { ToastContainer, toast } from "react-toastify";
 
 const DEMO_EMAIL = "malesija.nemanja@gmail.com";
 const DEMO_PASSWORD = "He5r4dOVdy9x6IT";
@@ -37,6 +38,12 @@ function LogIn() {
       );
       const data = await userResponse.json();
 
+      if (!userResponse.ok) {
+        toast.error(data.error.message);
+
+        return;
+      }
+
       if (data.token) {
         localStorage.setItem("jwt", data.token);
         navigate("/");
@@ -47,11 +54,13 @@ function LogIn() {
       }
     } catch (err) {
       console.error(err);
+      toast.error("Ups, something went wrong...");
     }
   };
 
   return (
-    <section className="min-h-screen !mt-[5%]">
+    <section className="!mt-[5%]">
+      <ToastContainer position="bottom-left" />
       <div className="w-[fit-content] !mx-auto flex justify-center items-center gap-2">
         <img className="w-12 h-12" src="logo.jpg" />
       </div>
