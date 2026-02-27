@@ -152,9 +152,14 @@ function Home() {
     } catch (err) {
       console.error(err);
     }
+
+    setInputPost("");
+    setNewAudioSrc(null);
+    setAudioBlob(null);
+    fetchPosts();
   };
 
-  const like = async (postId: string, liked: boolean, likes: number) => {
+  const likePost = async (postId: string, liked: boolean, likes: number) => {
     try {
       const response = fetch(
         `https://api.hr.constel.co/api/v1/posts/${postId}/like`,
@@ -186,6 +191,11 @@ function Home() {
         });
       }
     });
+  };
+
+  const deletePost = async () => {
+    // DELETE API:
+    // https://api.hr.constel.co/api/v1/posts/53a49587-9809-4d4a-8536-8fecbad02df5
   };
 
   console.log(posts);
@@ -248,6 +258,7 @@ function Home() {
             )}
 
             <button
+              type="submit"
               className={`!py-2 !px-4 text-gray-100 transition duration-300 rounded cursor-pointer 
             ${isActive ? "bg-blue-500 hover:bg-blue-600" : "bg-gray-300 hover:bg-gray-400"}`}
               disabled={!isActive}
@@ -281,7 +292,7 @@ function Home() {
                   {item.created_at.split("T")[0].split("-").reverse().join(".")}
                 </span>
 
-                <button className="cursor-pointer flex justify-center items-center">
+                <button className="cursor-pointer flex justify-center items-center cursor-pointer">
                   <i className="bxr  bx-trash text-red-600 text-lg "></i>
                 </button>
               </div>
@@ -307,8 +318,8 @@ function Home() {
             </div>
             <div className="flex justify-start gap-3 !my-3">
               <button
-                className="bg-gray-300 rouded !px-3 !py-1  flex justify-center items-center gap-1"
-                onClick={() => like(item.post_id, item.liked, item.likes)}
+                className="bg-gray-300 rouded !px-3 !py-1 flex justify-center items-center gap-1 cursor-pointer"
+                onClick={() => likePost(item.post_id, item.liked, item.likes)}
               >
                 {item.liked ? (
                   <i className="bxr  bxs-heart"></i>
