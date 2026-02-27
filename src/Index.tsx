@@ -9,6 +9,8 @@ function Home() {
   const [user, setUser] = useState<User | undefined>(undefined);
   const [inputPost, setInputPost] = useState<string>("");
 
+  console.log(posts);
+
   const [tokenState, setTokenState] = useState<string | null>(null);
 
   const [isActive, setIsActive] = useState(false);
@@ -49,7 +51,6 @@ function Home() {
 
   useEffect(() => {
     const token = localStorage.getItem("jwt");
-    console.log("token", token);
 
     if (token) {
       setTokenState(token);
@@ -94,8 +95,6 @@ function Home() {
         );
         const user = await userResponse.json();
         setUser(user.account);
-
-        // console.log("user response", user);
       } catch (err) {
         console.error(err);
       }
@@ -114,7 +113,6 @@ function Home() {
 
         const posts = await postResponse.json();
 
-        console.log("posts response", posts);
         setPosts(posts.posts);
       } catch (err) {
         console.error(err);
@@ -127,35 +125,6 @@ function Home() {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-
-    // console.log(inputPost);
-    // try {
-    //   const postResponse = await fetch(
-    //     "https://api.hr.constel.co/api/v1/posts",
-    //     {
-    //       method: "POST",
-    //       headers: {
-    //         Authorization: `Bearer ${tokenState}`,
-    //         "Content-Type": "application/x-www-form-urlencoded",
-    //       },
-    //       body:
-    //         "text=" +
-    //         encodeURIComponent(inputPost) +
-    //         "&audio=" +
-    //         encodeURIComponent(newAudioSrc ?? ""),
-    //     },
-    //   );
-    //   const data = await postResponse.json();
-
-    //   if (!postResponse.ok) {
-    //     console.log("Nije uspelo", data.message);
-    //     return;
-    //   }
-
-    //   console.log("uspelo je");
-    // } catch (err) {
-    //   console.error(err);
-    // }
 
     try {
       const formData = new FormData();
@@ -179,21 +148,35 @@ function Home() {
       const data = await postResponse.json();
 
       if (!postResponse.ok) {
-        console.log("Nije uspelo", data);
+        console.log(data.error.message);
         return;
       }
-
-      console.log("Uspelo je");
     } catch (err) {
       console.error(err);
     }
   };
 
-  console.log("newAudioSrc", newAudioSrc);
+  const like = async () => {
+    try {
+      const response = fetch(
+        "https://api.hr.constel.co/api/v1/posts/bd7b2edb-c015-44d6-8ef8-8c50d96d351d/like",
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${tokenState}`,
+          },
+        },
+      );
+      console.log(response);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <section className="min-h-screen !mt-[2%] flex flex-col items-start gap-5 !pb-8">
       <div className="absolute top-10 right-10">
+        <button onClick={() => like()}>Like</button>
         <button
           className="bg-red-500 text-white !px-2 !py-1 rounded cursor-pointer"
           onClick={() => handleLogOut()}
@@ -263,6 +246,7 @@ function Home() {
         return (
           <article
             key={index}
+            id={item.post_id}
             className="w-[600px] !mx-auto flex flex-col bg-gray-200 !p-4 gap-3 rounded"
           >
             <div className="flex items-start">

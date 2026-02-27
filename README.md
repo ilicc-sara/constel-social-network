@@ -299,3 +299,33 @@ useEffect(() => {
 ```
 
 min-h-screen
+
+```// console.log(inputPost);
+    // try {
+    //   const postResponse = await fetch(
+    //     "https://api.hr.constel.co/api/v1/posts",
+    //     {
+    //       method: "POST",
+    //       headers: {
+    //         Authorization: `Bearer ${tokenState}`,
+    //         "Content-Type": "application/x-www-form-urlencoded",
+    //       },
+    //       body:
+    //         "text=" +
+    //         encodeURIComponent(inputPost) +
+    //         "&audio=" +
+    //         encodeURIComponent(newAudioSrc ?? ""),
+    //     },
+    //   );
+    //   const data = await postResponse.json();
+
+    //   if (!postResponse.ok) {
+    //     console.log("Nije uspelo", data.message);
+    //     return;
+    //   }
+
+    //   console.log("uspelo je");
+    // } catch (err) {
+    //   console.error(err);
+    // }
+```
