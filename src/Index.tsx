@@ -154,7 +154,7 @@ function Home() {
     }
   };
 
-  const like = async (postId: string, liked: boolean) => {
+  const like = async (postId: string, liked: boolean, likes: number) => {
     try {
       const response = fetch(
         `https://api.hr.constel.co/api/v1/posts/${postId}/like`,
@@ -170,8 +170,25 @@ function Home() {
       console.error(err);
     }
 
-    fetchPosts();
+    // fetchPosts();
+
+    setPosts((prev) => {
+      if (!prev) return prev;
+      {
+        return prev?.map((item) => {
+          if (item.post_id === postId) {
+            return {
+              ...item,
+              liked: !liked,
+              likes: liked ? likes - 1 : likes + 1,
+            };
+          } else return item;
+        });
+      }
+    });
   };
+
+  console.log(posts);
 
   return (
     <section className="min-h-screen !mt-[2%] flex flex-col items-start gap-5 !pb-8">
@@ -291,7 +308,7 @@ function Home() {
             <div className="flex justify-start gap-3 !my-3">
               <button
                 className="bg-gray-300 rouded !px-3 !py-1  flex justify-center items-center gap-1"
-                onClick={() => like(item.post_id, item.liked)}
+                onClick={() => like(item.post_id, item.liked, item.likes)}
               >
                 {item.liked ? (
                   <i className="bxr  bxs-heart"></i>
