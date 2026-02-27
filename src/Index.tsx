@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { AudioRecorder, useAudioRecorder } from "react-audio-voice-recorder";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
 
 function Home() {
   const [newAudioSrc, setNewAudioSrc] = useState<string | null>(null);
@@ -157,6 +158,7 @@ function Home() {
     setNewAudioSrc(null);
     setAudioBlob(null);
     fetchPosts();
+    toast.success("Post successfully created.");
   };
 
   const likePost = async (postId: string, liked: boolean, likes: number) => {
@@ -201,7 +203,8 @@ function Home() {
   console.log(posts);
 
   return (
-    <section className="min-h-screen !mt-[2%] flex flex-col items-start gap-5 !pb-8">
+    <section className="min-h-screen !mt-[1%] flex flex-col items-start gap-5 !pb-8">
+      <ToastContainer position="top-center" />
       <div className="absolute top-10 right-10">
         <button
           className="bg-red-500 text-white !px-2 !py-1 rounded cursor-pointer"
@@ -209,6 +212,9 @@ function Home() {
         >
           Log Out
         </button>
+      </div>
+      <div className="absolute top-10 left-10">
+        <img className="w-12 h-12" src="logo.jpg" />
       </div>
       <div className="w-[600px] !mx-auto ">
         <form
@@ -292,7 +298,9 @@ function Home() {
                   {item.created_at.split("T")[0].split("-").reverse().join(".")}
                 </span>
 
-                <button className="cursor-pointer flex justify-center items-center cursor-pointer">
+                <button
+                  className={`${user?.username === item.user.username ? "" : "hidden"} cursor-pointer flex justify-center items-center cursor-pointer`}
+                >
                   <i className="bxr  bx-trash text-red-600 text-lg "></i>
                 </button>
               </div>
