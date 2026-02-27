@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 function Home() {
   const [newAudioSrc, setNewAudioSrc] = useState<string | null>(null);
+  const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
   const [posts, setPosts] = useState<Posts[] | null>(null);
   const [user, setUser] = useState<User | undefined>(undefined);
   const [inputPost, setInputPost] = useState<string>("");
@@ -60,8 +61,9 @@ function Home() {
   }, []);
 
   const recorderControls = useAudioRecorder();
-  const addAudioElement = (blob: any) => {
+  const addAudioElement = (blob: Blob) => {
     const url = URL.createObjectURL(blob);
+    setAudioBlob(blob);
     setNewAudioSrc(url);
   };
 
@@ -126,35 +128,68 @@ function Home() {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
-    console.log(inputPost);
+    // console.log(inputPost);
+    // try {
+    //   const postResponse = await fetch(
+    //     "https://api.hr.constel.co/api/v1/posts",
+    //     {
+    //       method: "POST",
+    //       headers: {
+    //         Authorization: `Bearer ${tokenState}`,
+    //         "Content-Type": "application/x-www-form-urlencoded",
+    //       },
+    //       body:
+    //         "text=" +
+    //         encodeURIComponent(inputPost) +
+    //         "&audio=" +
+    //         encodeURIComponent(newAudioSrc ?? ""),
+    //     },
+    //   );
+    //   const data = await postResponse.json();
+
+    //   if (!postResponse.ok) {
+    //     console.log("Nije uspelo", data.message);
+    //     return;
+    //   }
+
+    //   console.log("uspelo je");
+    // } catch (err) {
+    //   console.error(err);
+    // }
+
     try {
+      const formData = new FormData();
+      formData.append("text", inputPost);
+
+      if (audioBlob) {
+        formData.append("audio", audioBlob, "recording.webm");
+      }
+
       const postResponse = await fetch(
         "https://api.hr.constel.co/api/v1/posts",
         {
           method: "POST",
           headers: {
             Authorization: `Bearer ${tokenState}`,
-            "Content-Type": "application/x-www-form-urlencoded",
           },
-          body:
-            "text=" +
-            encodeURIComponent(inputPost) +
-            "&audio=" +
-            encodeURIComponent(`${newAudioSrc ? newAudioSrc : ""}`),
+          body: formData,
         },
       );
+
       const data = await postResponse.json();
 
       if (!postResponse.ok) {
-        console.log("Nije uspelo", data.message);
+        console.log("Nije uspelo", data);
         return;
       }
 
-      console.log("uspelo je");
+      console.log("Uspelo je");
     } catch (err) {
       console.error(err);
     }
   };
+
+  console.log("newAudioSrc", newAudioSrc);
 
   return (
     <section className="min-h-screen !mt-[2%] flex flex-col items-start gap-5 !pb-8">
