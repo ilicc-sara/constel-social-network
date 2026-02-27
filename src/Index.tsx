@@ -9,8 +9,6 @@ function Home() {
   const [user, setUser] = useState<User | undefined>(undefined);
   const [inputPost, setInputPost] = useState<string>("");
 
-  console.log(posts);
-
   const [tokenState, setTokenState] = useState<string | null>(null);
 
   const [isActive, setIsActive] = useState(false);
@@ -61,6 +59,42 @@ function Home() {
     }
   }, []);
 
+  const fetchUser = async () => {
+    try {
+      const userResponse = await fetch(
+        "https://api.hr.constel.co/api/v1/accounts/me",
+        {
+          headers: {
+            Authorization: `Bearer ${tokenState}`,
+          },
+        },
+      );
+      const user = await userResponse.json();
+      setUser(user.account);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const fetchPosts = async () => {
+    try {
+      const postResponse = await fetch(
+        "https://api.hr.constel.co/api/v1/posts",
+        {
+          headers: {
+            Authorization: `Bearer ${tokenState}`,
+          },
+        },
+      );
+
+      const posts = await postResponse.json();
+
+      setPosts(posts.posts);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   const recorderControls = useAudioRecorder();
   const addAudioElement = (blob: Blob) => {
     const url = URL.createObjectURL(blob);
@@ -83,42 +117,6 @@ function Home() {
   };
 
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const userResponse = await fetch(
-          "https://api.hr.constel.co/api/v1/accounts/me",
-          {
-            headers: {
-              Authorization: `Bearer ${tokenState}`,
-            },
-          },
-        );
-        const user = await userResponse.json();
-        setUser(user.account);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    const fetchPosts = async () => {
-      try {
-        const postResponse = await fetch(
-          "https://api.hr.constel.co/api/v1/posts",
-          {
-            headers: {
-              Authorization: `Bearer ${tokenState}`,
-            },
-          },
-        );
-
-        const posts = await postResponse.json();
-
-        setPosts(posts.posts);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
     fetchUser();
     fetchPosts();
   }, [tokenState]);
@@ -156,12 +154,12 @@ function Home() {
     }
   };
 
-  const like = async () => {
+  const like = async (postId: string, liked: boolean) => {
     try {
       const response = fetch(
-        "https://api.hr.constel.co/api/v1/posts/bd7b2edb-c015-44d6-8ef8-8c50d96d351d/like",
+        `https://api.hr.constel.co/api/v1/posts/${postId}/like`,
         {
-          method: "DELETE",
+          method: `${liked ? "DELETE" : "POST"}`,
           headers: {
             Authorization: `Bearer ${tokenState}`,
           },
@@ -171,12 +169,13 @@ function Home() {
     } catch (err) {
       console.error(err);
     }
+
+    fetchPosts();
   };
 
   return (
     <section className="min-h-screen !mt-[2%] flex flex-col items-start gap-5 !pb-8">
       <div className="absolute top-10 right-10">
-        <button onClick={() => like()}>Like</button>
         <button
           className="bg-red-500 text-white !px-2 !py-1 rounded cursor-pointer"
           onClick={() => handleLogOut()}
@@ -246,7 +245,6 @@ function Home() {
         return (
           <article
             key={index}
-            id={item.post_id}
             className="w-[600px] !mx-auto flex flex-col bg-gray-200 !p-4 gap-3 rounded"
           >
             <div className="flex items-start">
@@ -291,7 +289,10 @@ function Home() {
               )}
             </div>
             <div className="flex justify-start gap-3 !my-3">
-              <button className="bg-gray-300 rouded !px-3 !py-1  flex justify-center items-center gap-1">
+              <button
+                className="bg-gray-300 rouded !px-3 !py-1  flex justify-center items-center gap-1"
+                onClick={() => like(item.post_id, item.liked)}
+              >
                 {item.liked ? (
                   <i className="bxr  bxs-heart"></i>
                 ) : (
