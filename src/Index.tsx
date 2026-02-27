@@ -195,9 +195,27 @@ function Home() {
     });
   };
 
-  const deletePost = async () => {
-    // DELETE API:
-    // https://api.hr.constel.co/api/v1/posts/53a49587-9809-4d4a-8536-8fecbad02df5
+  const deletePost = async (postId: string) => {
+    try {
+      const response = fetch(
+        `https://api.hr.constel.co/api/v1/posts/${postId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${tokenState}`,
+          },
+        },
+      );
+      console.log(response);
+    } catch (err) {
+      console.error(err);
+    }
+
+    setPosts((prev) => {
+      if (!prev) return prev;
+      return prev.filter((item) => item.post_id !== postId);
+    });
+    toast.success("Post succesfully deleted.");
   };
 
   console.log(posts);
@@ -300,6 +318,7 @@ function Home() {
 
                 <button
                   className={`${user?.username === item.user.username ? "" : "hidden"} cursor-pointer flex justify-center items-center cursor-pointer`}
+                  onClick={() => deletePost(item.post_id)}
                 >
                   <i className="bxr  bx-trash text-red-600 text-lg "></i>
                 </button>
