@@ -1,4 +1,4 @@
-import type { Posts, User } from "../types";
+import type { Posts, User } from "../../../types";
 import { toast } from "react-toastify";
 
 const URL_API = "https://api.hr.constel.co/api/v1";
