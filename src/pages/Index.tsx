@@ -3,6 +3,8 @@ import { AudioRecorder, useAudioRecorder } from "react-audio-voice-recorder";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 
+const URL_API = "https://api.hr.constel.co/api/v1";
+
 function Home() {
   const [newAudioSrc, setNewAudioSrc] = useState<string | null>(null);
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
@@ -62,14 +64,11 @@ function Home() {
 
   const fetchUser = async () => {
     try {
-      const userResponse = await fetch(
-        "https://api.hr.constel.co/api/v1/accounts/me",
-        {
-          headers: {
-            Authorization: `Bearer ${tokenState}`,
-          },
+      const userResponse = await fetch(`${URL_API}/accounts/me`, {
+        headers: {
+          Authorization: `Bearer ${tokenState}`,
         },
-      );
+      });
       const user = await userResponse.json();
       setUser(user.account);
     } catch (err) {
@@ -79,14 +78,11 @@ function Home() {
 
   const fetchPosts = async () => {
     try {
-      const postResponse = await fetch(
-        "https://api.hr.constel.co/api/v1/posts",
-        {
-          headers: {
-            Authorization: `Bearer ${tokenState}`,
-          },
+      const postResponse = await fetch(`${URL_API}/posts`, {
+        headers: {
+          Authorization: `Bearer ${tokenState}`,
         },
-      );
+      });
 
       const posts = await postResponse.json();
 
@@ -132,28 +128,21 @@ function Home() {
       if (audioBlob) {
         formData.append("audio", audioBlob, "recording.webm");
       }
-
-      const postResponse = await fetch(
-        "https://api.hr.constel.co/api/v1/posts",
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${tokenState}`,
-          },
-          body: formData,
+      const postResponse = await fetch(`${URL_API}/posts`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${tokenState}`,
         },
-      );
-
+        body: formData,
+      });
       const data = await postResponse.json();
-
       if (!postResponse.ok) {
-        console.log(data.error.message);
+        toast.error(data.error.message);
         return;
       }
     } catch (err) {
       console.error(err);
     }
-
     setInputPost("");
     setNewAudioSrc(null);
     setAudioBlob(null);
@@ -163,22 +152,16 @@ function Home() {
 
   const likePost = async (postId: string, liked: boolean, likes: number) => {
     try {
-      const response = fetch(
-        `https://api.hr.constel.co/api/v1/posts/${postId}/like`,
-        {
-          method: `${liked ? "DELETE" : "POST"}`,
-          headers: {
-            Authorization: `Bearer ${tokenState}`,
-          },
+      const response = fetch(`${URL_API}/posts/${postId}/like`, {
+        method: `${liked ? "DELETE" : "POST"}`,
+        headers: {
+          Authorization: `Bearer ${tokenState}`,
         },
-      );
-      console.log(response);
+      });
     } catch (err) {
       console.error(err);
     }
-
     // fetchPosts();
-
     setPosts((prev) => {
       if (!prev) return prev;
       {
@@ -197,15 +180,12 @@ function Home() {
 
   const deletePost = async (postId: string) => {
     try {
-      const response = fetch(
-        `https://api.hr.constel.co/api/v1/posts/${postId}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${tokenState}`,
-          },
+      const response = fetch(`${URL_API}/posts/${postId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${tokenState}`,
         },
-      );
+      });
       console.log(response);
     } catch (err) {
       console.error(err);
@@ -274,6 +254,7 @@ function Home() {
           <div className="flex gap-5 justify-end !my-3">
             {newAudioSrc && (
               <button
+                type="button"
                 onClick={() => handleDeleteAudio()}
                 className="text-2xl text-white !py-2 !px-4 rounded"
               >
@@ -282,6 +263,7 @@ function Home() {
             )}
 
             <button
+              onSubmit={handleSubmit}
               type="submit"
               className={`!py-2 !px-4 text-gray-100 transition duration-300 rounded cursor-pointer 
             ${isActive ? "bg-blue-500 hover:bg-blue-600" : "bg-gray-300 hover:bg-gray-400"}`}
