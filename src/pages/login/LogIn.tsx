@@ -1,7 +1,8 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import Input from "../../UI/Input";
+import Button from "../../UI/Button";
 
 const DEMO_EMAIL = "malesija.nemanja@gmail.com";
 const DEMO_PASSWORD = "He5r4dOVdy9x6IT";
@@ -90,13 +91,9 @@ function LogIn() {
           />
         </div>
 
-        <button
-          className={`w-full py-2 text-gray-100 transition duration-300 rounded cursor-pointer 
-            ${isActive ? "bg-blue-500 hover:bg-blue-600" : "bg-gray-300 hover:bg-gray-400"}`}
-          disabled={!isActive}
-        >
+        <Button active={isActive} variation="login" type="submit">
           Confirm
-        </button>
+        </Button>
       </form>
     </section>
   );

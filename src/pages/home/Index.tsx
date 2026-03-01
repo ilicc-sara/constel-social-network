@@ -5,6 +5,7 @@ import { ToastContainer, toast } from "react-toastify";
 import type { Posts, User } from "../../types";
 import Post from "./components/Post";
 import Input from "../../UI/Input";
+import Button from "../../UI/Button";
 
 const URL_API = "https://api.hr.constel.co/api/v1";
 
@@ -14,9 +15,7 @@ function Home() {
   const [posts, setPosts] = useState<Posts[] | null>(null);
   const [user, setUser] = useState<User | undefined>(undefined);
   const [inputPost, setInputPost] = useState<string>("");
-
   const [tokenState, setTokenState] = useState<string | null>(null);
-
   const [isActive, setIsActive] = useState(false);
 
   const navigate = useNavigate();
@@ -155,13 +154,6 @@ function Home() {
                 className="w-full h-full ovject-cover rounded-full"
               />
             </figure>
-            {/* <input
-              type="text"
-              className="border-b border-gray-300 w-full focus:outline-none focus:border-blue-500"
-              placeholder="What's happening"
-              value={inputPost}
-              onChange={(e) => setInputPost(e.target.value)}
-            /> */}
             <Input
               type="text"
               variation="post"
@@ -197,15 +189,9 @@ function Home() {
               </button>
             )}
 
-            <button
-              onSubmit={handleSubmit}
-              type="submit"
-              className={`!py-2 !px-4 text-gray-100 transition duration-300 rounded cursor-pointer 
-            ${isActive ? "bg-blue-500 hover:bg-blue-600" : "bg-gray-300 hover:bg-gray-400"}`}
-              disabled={!isActive}
-            >
+            <Button active={isActive} variation="post" type="submit">
               New Post
-            </button>
+            </Button>
           </div>
         </form>
       </div>
