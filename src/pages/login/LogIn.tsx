@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
+import Input from "../../UI/Input";
 
 const DEMO_EMAIL = "malesija.nemanja@gmail.com";
 const DEMO_PASSWORD = "He5r4dOVdy9x6IT";
@@ -71,21 +72,21 @@ function LogIn() {
       >
         <div className="flex flex-col w-full">
           Email
-          <input
-            className="bg-white w-full !p-1 !pl-2  border-2 border-solid border-gray-300 rounded focus:outline-none focus:border-blue-500"
-            placeholder="Enter your email here..."
+          <Input
             type="text"
-            onChange={(e) => setInputEmail(e.target.value)}
+            variation="email"
+            value={inputEmail}
+            handleChange={(e) => setInputEmail(e.target.value)}
           />
         </div>
 
         <div className="flex flex-col w-full">
           Password
-          <input
-            className="bg-white w-full !p-1 !pl-2  border-2 border-solid border-gray-300 rounded focus:outline-none focus:border-blue-500"
-            placeholder="Enter your password here..."
+          <Input
             type="password"
-            onChange={(e) => setInputPassword(e.target.value)}
+            variation="password"
+            value={inputPassword}
+            handleChange={(e) => setInputPassword(e.target.value)}
           />
         </div>
 
