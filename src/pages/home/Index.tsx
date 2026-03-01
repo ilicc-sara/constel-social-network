@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import type { Posts, User } from "../../types";
 import Post from "./components/Post";
+import Input from "../../UI/Input";
 
 const URL_API = "https://api.hr.constel.co/api/v1";
 
@@ -154,12 +155,18 @@ function Home() {
                 className="w-full h-full ovject-cover rounded-full"
               />
             </figure>
-            <input
+            {/* <input
               type="text"
               className="border-b border-gray-300 w-full focus:outline-none focus:border-blue-500"
               placeholder="What's happening"
               value={inputPost}
               onChange={(e) => setInputPost(e.target.value)}
+            /> */}
+            <Input
+              type="text"
+              variation="post"
+              value={inputPost}
+              handleChange={(e) => setInputPost(e.target.value)}
             />
           </div>
           <div
