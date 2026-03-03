@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import Input from "../../UI/Input";
 import Button from "../../UI/Button";
@@ -8,20 +8,27 @@ const DEMO_EMAIL = "malesija.nemanja@gmail.com";
 const DEMO_PASSWORD = "He5r4dOVdy9x6IT";
 
 function LogIn() {
-  const [isActive, setIsActive] = useState(false);
-
   const [inputEmail, setInputEmail] = useState("");
   const [inputPassword, setInputPassword] = useState("");
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (inputEmail.includes("@") && inputPassword.length > 8) {
-      setIsActive(true);
+  const isActive = useMemo(() => {
+    if (inputEmail.includes("@") && inputPassword.length > 4) {
+      return true;
     } else {
-      setIsActive(false);
+      return false;
     }
-  }, [isActive, inputEmail, inputPassword]);
+  }, [inputEmail, inputPassword]);
+
+  useEffect(() => {
+    const token = localStorage.getItem("jwt");
+    if (token) {
+      navigate("/");
+    } else {
+      navigate("/login");
+    }
+  }, []);
 
   const logIn = async (e: any) => {
     e.preventDefault();

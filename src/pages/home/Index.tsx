@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { AudioRecorder, useAudioRecorder } from "react-audio-voice-recorder";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
@@ -16,15 +16,13 @@ function Home() {
   const [user, setUser] = useState<User | undefined>(undefined);
   const [inputPost, setInputPost] = useState<string>("");
 
-  const [isActive, setIsActive] = useState(false);
-
   const navigate = useNavigate();
 
-  useEffect(() => {
+  const isActive = useMemo(() => {
     if (inputPost !== "" || newAudioSrc) {
-      setIsActive(true);
+      return true;
     } else {
-      setIsActive(false);
+      return false;
     }
   }, [inputPost, newAudioSrc]);
 
@@ -60,10 +58,12 @@ function Home() {
 
   useEffect(() => {
     const token = localStorage.getItem("jwt");
-    if (token) {
+    if (token && !user && !posts) {
       fetchUser(token);
       fetchPosts(token);
-    } else {
+    } else if (token && posts && user) {
+      return;
+    } else if (!token) {
       console.error();
       navigate("/login");
     }
@@ -114,10 +114,10 @@ function Home() {
     } catch (err) {
       console.error(err);
     }
+    if (token) fetchPosts(token);
     setInputPost("");
     setNewAudioSrc(null);
     setAudioBlob(null);
-    if (token) fetchPosts(token);
     toast.success("Post successfully created.");
   };
 
