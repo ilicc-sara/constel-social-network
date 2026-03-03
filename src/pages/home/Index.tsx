@@ -15,7 +15,7 @@ function Home() {
   const [posts, setPosts] = useState<Posts[] | null>(null);
   const [user, setUser] = useState<User | undefined>(undefined);
   const [inputPost, setInputPost] = useState<string>("");
-  const [tokenState, setTokenState] = useState<string | null>(null);
+
   const [isActive, setIsActive] = useState(false);
 
   const navigate = useNavigate();
@@ -28,19 +28,7 @@ function Home() {
     }
   }, [inputPost, newAudioSrc]);
 
-  useEffect(() => {
-    const token = localStorage.getItem("jwt");
-
-    if (token) {
-      setTokenState(token);
-    } else {
-      console.error();
-      setTokenState(null);
-      navigate("/login");
-    }
-  }, []);
-
-  const fetchUser = async () => {
+  const fetchUser = async (tokenState: string) => {
     try {
       const userResponse = await fetch(`${URL_API}/accounts/me`, {
         headers: {
@@ -54,7 +42,7 @@ function Home() {
     }
   };
 
-  const fetchPosts = async () => {
+  const fetchPosts = async (tokenState: string) => {
     try {
       const postResponse = await fetch(`${URL_API}/posts`, {
         headers: {
@@ -69,6 +57,17 @@ function Home() {
       console.error(err);
     }
   };
+
+  useEffect(() => {
+    const token = localStorage.getItem("jwt");
+    if (token) {
+      fetchUser(token);
+      fetchPosts(token);
+    } else {
+      console.error();
+      navigate("/login");
+    }
+  }, []);
 
   const recorderControls = useAudioRecorder();
   const addAudioElement = (blob: Blob) => {
@@ -87,18 +86,12 @@ function Home() {
 
   const handleLogOut = () => {
     localStorage.removeItem("jwt");
-    setTokenState(null);
     navigate("/login");
   };
 
-  useEffect(() => {
-    fetchUser();
-    fetchPosts();
-  }, [tokenState]);
-
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-
+    const token = localStorage.getItem("jwt");
     try {
       const formData = new FormData();
       formData.append("text", inputPost);
@@ -109,7 +102,7 @@ function Home() {
       const postResponse = await fetch(`${URL_API}/posts`, {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${tokenState}`,
+          Authorization: `Bearer ${token}`,
         },
         body: formData,
       });
@@ -124,7 +117,7 @@ function Home() {
     setInputPost("");
     setNewAudioSrc(null);
     setAudioBlob(null);
-    fetchPosts();
+    if (token) fetchPosts(token);
     toast.success("Post successfully created.");
   };
 
@@ -198,13 +191,7 @@ function Home() {
 
       {posts?.map((item, index) => {
         return (
-          <Post
-            index={index}
-            item={item}
-            user={user}
-            tokenState={tokenState}
-            setPosts={setPosts}
-          />
+          <Post index={index} item={item} user={user} setPosts={setPosts} />
         );
       })}
     </section>

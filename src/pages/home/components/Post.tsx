@@ -7,17 +7,17 @@ type PostProps = {
   index: number;
   item: Posts | null;
   user: User | undefined;
-  tokenState: string | null;
   setPosts: React.Dispatch<React.SetStateAction<Posts[] | null>>;
 };
 
-function Post({ index, item, user, tokenState, setPosts }: PostProps) {
+function Post({ index, item, user, setPosts }: PostProps) {
   const likePost = async (postId: string, liked: boolean, likes: number) => {
+    const token = localStorage.getItem("jwt");
     try {
       fetch(`${URL_API}/posts/${postId}/like`, {
         method: `${liked ? "DELETE" : "POST"}`,
         headers: {
-          Authorization: `Bearer ${tokenState}`,
+          Authorization: `Bearer ${token}`,
         },
       });
     } catch (err) {
@@ -41,11 +41,12 @@ function Post({ index, item, user, tokenState, setPosts }: PostProps) {
   };
 
   const deletePost = async (postId: string) => {
+    const token = localStorage.getItem("jwt");
     try {
       const response = fetch(`${URL_API}/posts/${postId}`, {
         method: "DELETE",
         headers: {
-          Authorization: `Bearer ${tokenState}`,
+          Authorization: `Bearer ${token}`,
         },
       });
       console.log(response);
