@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 import { AudioRecorder, useAudioRecorder } from "react-audio-voice-recorder";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
@@ -18,13 +18,13 @@ function Home() {
 
   const navigate = useNavigate();
 
-  const isActive = useMemo(() => {
+  const isActive = () => {
     if (inputPost !== "" || newAudioSrc) {
       return true;
     } else {
       return false;
     }
-  }, [inputPost, newAudioSrc]);
+  };
 
   const fetchUser = async (tokenState: string) => {
     try {
@@ -182,7 +182,7 @@ function Home() {
               </button>
             )}
 
-            <Button active={isActive} variation="post" type="submit">
+            <Button active={isActive()} variation="post" type="submit">
               New Post
             </Button>
           </div>
