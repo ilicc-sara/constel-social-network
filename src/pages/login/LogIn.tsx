@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import Input from "../../UI/Input";
 import Button from "../../UI/Button";
@@ -13,13 +13,13 @@ function LogIn() {
 
   const navigate = useNavigate();
 
-  const isActive = useMemo(() => {
-    if (inputEmail.includes("@") && inputPassword.length > 4) {
+  const isActive = () => {
+    if (inputEmail.includes("@") && inputPassword.length > 7) {
       return true;
     } else {
       return false;
     }
-  }, [inputEmail, inputPassword]);
+  };
 
   useEffect(() => {
     const token = localStorage.getItem("jwt");
@@ -98,7 +98,7 @@ function LogIn() {
           />
         </div>
 
-        <Button active={isActive} variation="login" type="submit">
+        <Button active={isActive()} variation="login" type="submit">
           Confirm
         </Button>
       </form>

@@ -1,5 +1,3 @@
-import React from "react";
-
 type ButtonProps = {
   active: boolean;
   variation: string;
